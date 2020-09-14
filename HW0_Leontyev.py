@@ -39,7 +39,7 @@ def preprocess(text):
 
 def build_freq(word_list, file_name):
     '''
-    Строит частотный словарь и записывает его в файл csv.
+    Строит частотный словарь и записывает его в файл CSV или JSON.
     :param word_list: список словоформ, lst
     :param file_name: имя файла для записи, str
     :return: None
