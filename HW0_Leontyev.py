@@ -37,32 +37,29 @@ def preprocess(text):
     return word_list
 
 
-def build_freq_csv(word_list, file_name):
+def build_freq(word_list, file_name):
     '''
     Строит частотный словарь и записывает его в файл csv.
     :param word_list: список словоформ, lst
     :param file_name: имя файла для записи, str
     :return: None
     '''
-    with open(file_name, 'w') as output:
-        c = Counter()
-        c.update(word_list)
-        writer = csv.writer(output)
-        for el in c.most_common():
-            writer.writerow(el)
+    if file_name.endswith('.csv'):
+        with open(file_name, 'w') as output:
+            c = Counter()
+            c.update(word_list)
+            writer = csv.writer(output)
+            for el in c.most_common():
+                writer.writerow(el)
 
+    elif file_name.endswith('.json'):
+        with open(file_name, 'w') as output:
+            c = Counter()
+            c.update(word_list)
+            json.dump(c.most_common(), output, indent=4, ensure_ascii=False)
 
-def build_freq_json(word_list, file_name):
-    '''
-    Строит частотный словарь и записывает его в файл json.
-    :param word_list: список словоформ, lst
-    :param file_name: имя файла для записи, str
-    :return: None
-    '''
-    with open(file_name, 'w') as output:
-        c = Counter()
-        c.update(word_list)
-        json.dump(c.most_common(), output, indent=4, ensure_ascii=False)
+    else:
+        raise ValueError('CSV and JSON files only.')
 
 
 def lemmatize(text):
@@ -78,7 +75,7 @@ def lemmatize(text):
 def find_char_rep(char, n, word_list, file_name):
     '''
     Выбирает из списка слов те слова, в которых содержится ровно n
-    данных символов, и записывает их множество в файл txt.
+    символов char, и записывает их множество в файл txt.
     :param char: символ для поиска, str
     :param n: число повторений символа, int
     :param word_list: список слов для поиска, lst
@@ -102,7 +99,7 @@ def main():
         text = input.read()
 
         # Часть 1
-        build_freq_csv(preprocess(text), 'freq1.csv')
+        build_freq(preprocess(text), 'freq1.csv')
 
         # Часть 2.1
         find_char_rep('о', 2, lemmatize(text), '2o.txt')
@@ -110,7 +107,7 @@ def main():
     # Часть 2.2
     r = requests.post('http://lib.ru/POEZIQ/PESSOA/lirika.txt')
     text = BeautifulSoup(r.content, features='html.parser').text
-    build_freq_json(lemmatize(text), 'freq2.json')
+    build_freq(lemmatize(text), 'freq2.json')
 
 
 
