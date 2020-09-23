@@ -1,3 +1,6 @@
 def solution(a, b):
-    ### YOUR CODE ###
-    return
+    new = []
+    for el in b:
+        if el not in a:
+            new.append(el)
+    return sorted(a + new)

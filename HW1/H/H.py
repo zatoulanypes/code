@@ -1,3 +1,2 @@
 def solution(a):
-    ### YOUR CODE ###
-    return
+    return [list(el) for el in list(zip(*a))]
