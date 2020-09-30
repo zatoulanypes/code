@@ -16,7 +16,7 @@ def solution(n, k):
 
 
 def solution2(n, k):
-    # нагугленное решение, но работет быстро
+    # нагугленное решение, но работает быстро
     res = 0
     for i in range(1, n + 1):
         res = (res + k) % i
