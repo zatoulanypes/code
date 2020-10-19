@@ -8,7 +8,13 @@ def integers():
 def squares():
     for i in integers():
         yield i*i
-       
-   
+
+
 def take(n, generator):
-    return [next(generator) for i in range(n)]
+    res = []
+    try:
+        for i in range(n):
+            res.append(next(generator))
+    except StopIteration:
+        pass
+    return res
