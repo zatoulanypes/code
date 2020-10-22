@@ -36,6 +36,15 @@ def generator(adjfs, nouns):
         except ValueError:
             pass
 
+        # В pymorphy2 некоторым существительным в графе рода присвоены пометы Ms-f (для сущ. общего рода,
+        # напр. "сирота") и GNdr (для сущ., у ктороых род не выражен). Эти пометы не являются значениями
+        # p.tag.gender, следовательно, при вызове метода inflect возвращается None, а при попытке склеить
+        # строку выбрасывается исключение ValueError. В нашем случае такие существительные пропускаются.
+        #
+        # Parse(word='ковы', tag=OpencorporaTag('NOUN,inan,GNdr,Pltm plur,nomn'), normal_form='ковы', score=1.0,
+        # methods_stack=((<DictionaryAnalyzer>, 'ковы', 209, 0),))) -- пример словоформы, на которой спотыкалась
+        # программа.
+
 
 with open('rus_shuffled.txt', 'r') as file:
     d = file.readlines()
