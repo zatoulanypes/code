@@ -6,7 +6,7 @@ from corus import load_corpora
 
 class UnigramMorphAnalyzer:
 
-    records = load_corpora('annot.opcorpora.xml.byfile.zip')
+    records = load_corpora('/Users/aleontyev/annot.opcorpora.xml.byfile.zip')
     endings_stat = dict()
 
 
@@ -52,21 +52,19 @@ class UnigramMorphAnalyzer:
 
     def predict(self, token):
 
-        try:
-            if len(token) > 4:
-                ending = token[-4:]
-            else:
-                ending = token
-
-            pos_stat = self.endings_stat[ending]
-            total = 0
-            for i in pos_stat.values():
-                total += i
-
-            return {round(value/total, 2): key for key, value in pos_stat.items()}
-
-        except KeyError:
-            return {1.0: 'UNKN'}
+        n = 4
+        while n >= 1:
+            try:
+                ending = token[-n:]
+                pos_stat = self.endings_stat[ending]
+                total = 0
+                for i in pos_stat.values():
+                    total += i
+                return {round(value / total, 2): key for key, value in pos_stat.items()}
+            except:
+                n -= 1
+                continue
+        return {1.0: 'UNKN'}
 
 
     def save(self):
