@@ -5,6 +5,8 @@ class MinStack(object):
         initialize your data structure here.
         """
         self.l = []
+        self.mins = [None]
+        self.current_min = None
 
     def push(self, x):
         """
@@ -12,11 +14,17 @@ class MinStack(object):
         :rtype: None
         """
         self.l.append(x)
+        if self.current_min is None or x <= self.current_min:
+            self.current_min = x
+            self.mins.append(x)
 
     def pop(self):
         """
         :rtype: None
         """
+        if self.l[-1] == self.current_min:
+            self.mins.pop()
+            self.current_min = self.mins[-1]
         self.l.pop()
 
     def top(self):
@@ -29,9 +37,5 @@ class MinStack(object):
         """
         :rtype: int
         """
-        return min(self.l)
+        return self.current_min
 
-# В задании сказано, что все опреации должны выполняться за константное время, но как быть с getMin? В любом
-# случае, на leetcode решение приняли.
-# Runtime 632 ms
-# Memory 17.4 MB
