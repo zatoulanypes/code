@@ -64,7 +64,7 @@ def find_tops(users):
 
         langs.update(user.languages())
 
-    top_lang = langs.most_common()[0][0]
+    top_lang = langs.most_common()[0]
 
     print(f'\nПользователь с наибольшим числом репозиториев: {max_repos}')
     print(f'Пользователь с наибольшим числом подписчиков: {max_followers}')
