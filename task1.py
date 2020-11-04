@@ -51,7 +51,7 @@ def find_tops(users):
 
     max_repos = None
     max_followers = None
-    top_langs = Counter()
+    langs = Counter()
 
     for u in users:
         user = GitHubUser(u)
@@ -62,10 +62,9 @@ def find_tops(users):
         if max_followers is None or user.followers > max_followers[1]:
             max_followers = (user.username, user.followers)
 
-        langs = user.languages()
-        top_langs.update(langs.keys())
+        langs.update(user.languages())
 
-    top_lang = top_langs.most_common()[0][0]
+    top_lang = langs.most_common()[0][0]
 
     print(f'\nПользователь с наибольшим числом репозиториев: {max_repos}')
     print(f'Пользователь с наибольшим числом подписчиков: {max_followers}')
