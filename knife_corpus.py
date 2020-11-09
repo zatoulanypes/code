@@ -20,7 +20,7 @@ def collect_corpus():
             for article in articles:
                 art_link = article.findAll('a', class_='widget-news__content-link')[0]['href']
                 art_date = article.find('time').text
-                art_tags = [tag.text for tag in article.findAll('a', class_='meta-item')]
+                art_tags = [tag.text for tag in article.findAll('a', class_='meta__item')]
 
                 art_req = requests.get(art_link)
                 if art_req.status_code == 200:
@@ -28,7 +28,7 @@ def collect_corpus():
 
                     art_title = art_soup.find('h1').text
                     art_entry = art_soup.findAll('div', class_='entry-content')[0]
-                    art_text = [p.text for p in art_entry.findAll(['h1', 'p', 'h4'], recursive=False)]
+                    art_text = '\n'.join([p.text for p in art_entry.findAll(['h1', 'p', 'h4'], recursive=False)])
 
                     data = {
                         'Title': art_title,
@@ -38,6 +38,7 @@ def collect_corpus():
                         'Text': art_text
                     }
                     corpus.append(data)
+                    print(art_date)
 
                 date = art_date
 
@@ -45,9 +46,10 @@ def collect_corpus():
 
 
 def main():
+    corpus = collect_corpus()
     with open('knife_corpus.json', 'w', encoding='utf-8') as file:
         json.dump(corpus, file, indent=4, ensure_ascii=False)
 
 
-if __name__ == '__main':
+if __name__ == '__main__':
     main()
