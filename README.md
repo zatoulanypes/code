@@ -2,4 +2,4 @@
 https://knife.media/category/news/
 
 Ссылка на загрузку корпуса в формате JSON:
-https://drive.google.com/file/d/1hJftI4PtSEYxUAt-vCxBwdZ1d7A6ZSpM/view?usp=sharing
+https://drive.google.com/drive/folders/1bHjb8N4m9VIfA2cjNjZbFmknd8pK-ZCv?usp=sharing
