@@ -3,44 +3,51 @@ import requests
 from bs4 import BeautifulSoup
 
 
+def parse_article(article):
+    url = article.findAll('a', class_='widget-news__content-link')[0]['href']
+    req = requests.get(url)
+
+    if req.status_code == 200:
+        soup = BeautifulSoup(req.content, features='html.parser')
+
+        title = soup.find('h1').text
+        author = soup.findAll('a', attrs={'rel': 'author'})[0].text
+        date = soup.find('time').text
+        tags = [tag.text for tag in soup.findAll('a', attrs={'rel': 'tag'})]
+        entry = soup.findAll('div', class_='entry-content')[0]
+        text = '\n'.join([p.text for p in entry.findAll(['h1', 'p', 'h4'], recursive=False)])
+
+        return {
+            'Title': title,
+            'Author': author,
+            'Date': date,
+            'Tags': tags,
+            'Link': url,
+            'Text': text
+        }
+
+
+def parse_page(page, url=None):
+    url = url or 'https://knife.media/category/news/page/'
+    req = requests.get(url + str(page))
+
+    if req.status_code == 200:
+        soup = BeautifulSoup(req.content, features='html.parser')
+        articles = soup.findAll('div', class_='widget-news__wrapper')
+
+        return [parse_article(article) for article in articles]
+
+
 def collect_corpus():
     corpus = []
-
     page = 0
-    link = 'https://knife.media/category/news/page/'
     date = ''
 
     while not date.endswith('октября 2019'):
         page += 1
-        page_req = requests.get(link + str(page))
-        if page_req.status_code == 200:
-            page_soup = BeautifulSoup(page_req.content, features='html.parser')
-            articles = page_soup.findAll('div', class_='widget-news__wrapper')
-
-            for article in articles:
-                art_link = article.findAll('a', class_='widget-news__content-link')[0]['href']
-                art_date = article.find('time').text
-                art_tags = [tag.text for tag in article.findAll('a', class_='meta__item')]
-
-                art_req = requests.get(art_link)
-                if art_req.status_code == 200:
-                    art_soup = BeautifulSoup(art_req.content, features='html.parser')
-
-                    art_title = art_soup.find('h1').text
-                    art_entry = art_soup.findAll('div', class_='entry-content')[0]
-                    art_text = '\n'.join([p.text for p in art_entry.findAll(['h1', 'p', 'h4'], recursive=False)])
-
-                    data = {
-                        'Title': art_title,
-                        'Date': art_date,
-                        'Tags': art_tags,
-                        'Link': art_link,
-                        'Text': art_text
-                    }
-                    corpus.append(data)
-                    print(art_date)
-
-                date = art_date
+        corpus.extend(parse_page(page))
+        date = corpus[-1]['Date']
+        print(date)
 
     return corpus
 
